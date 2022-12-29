@@ -7,7 +7,7 @@ import { UserUpdateAddressDto } from './dto/userUpdateAddress.dto';
 import { UserUpdatePasswordDto } from './dto/userUpdatePassword.dto';
 import { UserUpdatePhoneDto } from './dto/userUpdatePhone.dto';
 import { User } from './user.entity';
-import { GetUser } from './user.info';
+import { GetUser } from '../middlewares/user.info';
 import { UserService } from './user.service';
 
 @Controller('user')
