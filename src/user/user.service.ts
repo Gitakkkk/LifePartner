@@ -9,7 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserSignUpDto } from './dto/userSignUp.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import * as bcrypt from 'bcryptjs';
 import { UserSignInDto } from './dto/userSignIn.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserUpdatePasswordDto } from './dto/userUpdatePassword.dto';
@@ -17,6 +16,7 @@ import { UserUpdatePhoneDto } from './dto/userUpdatePhone.dto';
 import { UserUpdateAddressDto } from './dto/userUpdateAddress.dto';
 import { UserUpdateAccountDto } from './dto/userUpdateAccoutn.dto';
 import * as config from 'config';
+import * as bcrypt from 'bcryptjs';
 
 const jwtConfig = config.jwt;
 
@@ -74,10 +74,9 @@ export class UserService {
       await this.userRepository.update(user.id, {
         password: hassedPassword,
       });
-      return;
-    }
-    throw new UnauthorizedException();
+    } else throw new UnauthorizedException();
   }
+
   async updatePhone(userUpdatePhoneDto: UserUpdatePhoneDto, user: User): Promise<void> {
     const { phone } = userUpdatePhoneDto;
     await this.userRepository.update(user.nickname, { phone });
