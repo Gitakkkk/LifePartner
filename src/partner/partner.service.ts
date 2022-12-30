@@ -19,7 +19,7 @@ export class PartnerService {
 
   async postPartner(id: number, user: User): Promise<void> {
     const partner = this.partnerRepository.create({
-      article_id: id,
+      articleID: id,
       partner: user.nickname,
     });
     await this.partnerRepository.save(partner);

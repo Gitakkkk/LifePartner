@@ -1,6 +1,8 @@
 import {
   BadRequestException,
+  CACHE_MANAGER,
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -16,6 +18,7 @@ import { UserUpdatePasswordDto } from './dto/userUpdatePassword.dto';
 import { UserUpdatePhoneDto } from './dto/userUpdatePhone.dto';
 import { UserUpdateAddressDto } from './dto/userUpdateAddress.dto';
 import { UserUpdateAccountDto } from './dto/userUpdateAccoutn.dto';
+import { Cache } from 'cache-manager';
 import * as config from 'config';
 
 const jwtConfig = config.jwt;
@@ -26,6 +29,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async signUp(userSignUpDto: UserSignUpDto): Promise<void> {
@@ -49,7 +53,6 @@ export class UserService {
     try {
       await this.userRepository.save(user);
     } catch (error) {
-      console.timeLog(error);
       if (error.code === '23505') throw new ConflictException('Existing username');
       throw new InternalServerErrorException();
     }
@@ -74,6 +77,7 @@ export class UserService {
       await this.userRepository.update(user.id, {
         password: hassedPassword,
       });
+      await this.cacheManager.del(`${user.nickname}`);
       return;
     }
     throw new UnauthorizedException();
@@ -81,6 +85,7 @@ export class UserService {
   async updatePhone(userUpdatePhoneDto: UserUpdatePhoneDto, user: User): Promise<void> {
     const { phone } = userUpdatePhoneDto;
     await this.userRepository.update(user.nickname, { phone });
+    await this.cacheManager.del(`${user.nickname}`);
   }
 
   async updateAddress(userUpdateAddress: UserUpdateAddressDto, user: User): Promise<void> {
@@ -90,6 +95,7 @@ export class UserService {
       detail_address,
       dong,
     });
+    await this.cacheManager.del(`${user.nickname}`);
   }
 
   async updateAccount(userUpdateAccount: UserUpdateAccountDto, user: User): Promise<void> {
@@ -99,10 +105,12 @@ export class UserService {
       account,
       holder,
     });
+    await this.cacheManager.del(`${user.nickname}`);
   }
 
   async deleteUser(user: User): Promise<void> {
     await this.userRepository.delete(user.nickname);
+    await this.cacheManager.del(`${user.nickname}`);
   }
 
   userInfo(user: User): User {

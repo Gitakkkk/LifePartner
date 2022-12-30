@@ -6,7 +6,7 @@ import { ArticleModule } from './article/article.module';
 import { PartnerModule } from './partner/partner.module';
 
 @Module({
-  imports: [UserModule, TypeOrmModule.forRoot(typeORMConfig), ArticleModule, PartnerModule],
+  imports: [UserModule, ArticleModule, PartnerModule, TypeOrmModule.forRoot(typeORMConfig)],
   controllers: [],
   providers: [],
 })
