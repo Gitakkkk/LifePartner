@@ -17,7 +17,7 @@ export class Article extends BaseEntity {
   @Column() post_holder: string;
   @Column({ default: 'waiting' }) status: string;
   @Column() point_earned: number;
-  @Column() partner: string;
+  @Column({ default: null }) partner: string;
   @Column() writer: string;
   @Column({ default: new Date().toLocaleDateString() }) date: string;
 }
