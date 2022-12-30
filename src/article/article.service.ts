@@ -65,7 +65,7 @@ export class ArticleService {
 
   async getPoint(user: User): Promise<{ articles: Article[]; current_point: number; date: string }> {
     const articles = await this.articleRepository.query(
-      'select article.id, article.point_earned, date_format(article.date, "%Y-%m-%d") as date from article where article.partner = ? order by article.id desc',
+      `select id, point_earned, date from article where article.partner=? order by id desc`,
       [user.nickname],
     );
     return {

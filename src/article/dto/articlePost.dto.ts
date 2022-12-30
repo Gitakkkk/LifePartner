@@ -14,5 +14,4 @@ export class ArticlePostDto {
   @IsString() post_account: string;
   @IsString() post_holder: string;
   @IsNumber() point_earned: number;
-  @IsString() writer: string;
 }
