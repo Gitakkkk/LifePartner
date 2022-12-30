@@ -7,8 +7,6 @@ export class UserSignInDto {
 
   @IsString()
   @MinLength(8)
-  @Matches(/^[a-zA-Z0-9]*$/, {
-    message: 'password only accepts English and Number',
-  })
+  @Matches(/^[a-zA-Z0-9]*$/)
   password: string;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserSignInDto } from './dto/userSignIn.dto';
 import { UserSignUpDto } from './dto/userSignUp.dto';
@@ -12,17 +12,20 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+  private logger = new Logger('UserController');
   constructor(private userService: UserService) {}
 
   @Post('signup')
   @UsePipes(ValidationPipe)
   signUp(@Body() userSignUpDto: UserSignUpDto): Promise<void> {
+    this.logger.debug('started signUp');
     return this.userService.signUp(userSignUpDto);
   }
 
   @Post('signin')
   @UsePipes(ValidationPipe)
   signIn(@Body() userSignInDto: UserSignInDto): Promise<{ accessToken: string }> {
+    this.logger.debug('started signIn');
     return this.userService.signIn(userSignInDto);
   }
 
@@ -30,6 +33,7 @@ export class UserController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard())
   updatePassword(@Body() userUpdatePasswordDto: UserUpdatePasswordDto, @GetUser() user: User): Promise<void> {
+    this.logger.debug('started updatePassword');
     return this.userService.updatePassword(userUpdatePasswordDto, user);
   }
 
@@ -37,6 +41,7 @@ export class UserController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard())
   updatePhone(@Body() userUpdatePhoneDto: UserUpdatePhoneDto, @GetUser() user: User): Promise<void> {
+    this.logger.debug('started updatePhone');
     return this.userService.updatePhone(userUpdatePhoneDto, user);
   }
 
@@ -44,6 +49,7 @@ export class UserController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard())
   updateAddress(@Body() userUpdateAddressDto: UserUpdateAddressDto, @GetUser() user: User): Promise<void> {
+    this.logger.debug('started updateAddress');
     return this.userService.updateAddress(userUpdateAddressDto, user);
   }
 
@@ -51,6 +57,7 @@ export class UserController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard())
   updateAccount(@Body() userUpdateAccountDto: UserUpdateAccountDto, @GetUser() user: User): Promise<void> {
+    this.logger.debug('started updateAccount');
     return this.userService.updateAccount(userUpdateAccountDto, user);
   }
 
@@ -58,6 +65,7 @@ export class UserController {
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard())
   userInfo(@GetUser() user: User): User {
+    this.logger.debug('started userInfo');
     return this.userService.userInfo(user);
   }
 }
